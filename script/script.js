@@ -9,7 +9,15 @@ const petals = [];
 const petalCount = 1;
 
 const petalImg = new Image();
+const petalImg1 = new Image();
+const petalImg2 = new Image();
+const petalImg3 = new Image();
 petalImg.src = 'img/petal.png'
+
+petalImg1.src = `img/snow1.png`
+petalImg2.src = `img/snow2.png`
+petalImg3.src = `img/snow3.png`
+
 
 const userAgent = navigator.userAgent ?? navigator.vendor ?? window.opera;
 const isIOS = /iPad|iPhone|iPod/.test(userAgent);
@@ -57,7 +65,9 @@ function generatePetal(fromTop=true){
     petal.swayPhase = rand(0, 2 * Math.PI);                          // 揺れの初期位相
     petal.swayAmp = rand(4, 16)*2;                                     // 揺れの振幅
     petal.swayPhaseSpeed = rand(0.6, 1.6);                           // 揺れの変化率（角速度）
-    
+    petal.snow = randInt(1,3);
+
+
     return petal;
 }
 
@@ -69,6 +79,7 @@ function generatePetals(petalCount) {
 }
 
 function drawPetals(petals) {
+
     if (!petalImg.complete) return;
 
     petals.forEach((petal) => {
@@ -81,8 +92,15 @@ function drawPetals(petals) {
 
         const width = petal.size;
         const height = petal.size;
-        context.drawImage(petalImg, -width / 2, -height / 2, width, height);
 
+        // context.drawImage(petalImg, -width / 2, -height / 2, width, height);
+        if (petal.snow === 1){
+            context.drawImage(petalImg1, -width / 2, -height / 2, width, height);
+        } else if (petal.snow === 2){
+            context.drawImage(petalImg2, -width / 2, -height / 2, width, height);
+        } else {
+            context.drawImage(petalImg3, -width / 2, -height / 2, width, height);
+        }
         context.restore();
     });
 }
@@ -143,7 +161,7 @@ function tick(now) {
     const dt = Math.min(0.05, (now - last) / 1000)*1;
 
     time += dt;
-    debugElement.textContent = `${Math.floor(time)}秒経過 : 花びらは${petals.length}個`;
+    debugElement.textContent = `${Math.floor(time)}秒経過 : 描画個数は${petals.length}個`;
 
     last = now;
 
